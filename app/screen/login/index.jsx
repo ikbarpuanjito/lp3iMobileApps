@@ -7,21 +7,42 @@ import {
   ImageBackground,
   Dimensions,
   Image,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { MyButton } from '../../components'      
 import { ICGoogle,ICFacebook } from '../../../assets'     
 import React from 'react'
+import {navigation} from '@react-navigation/native'
+
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function LoginScreen(){
+export default function LoginScreen({navigation}){
   const [email, onChangeEmail] = React.useState('')
   const [pasword, onChangePassword] = React.useState('')
 
-  const onSubmitLogin =()=>{
-    alert(email)
+  const onSubmitLogin = () => {
+    try{
+      if(email.trim().length === 0 ){
+        throw Error('Email is required')
+    }
+
+    if(password.trim().length === 0 ){
+      throw Error('Password is required')
+    }
+    navigation.navigate('Home')
+  }catch(err){
+    Alert.alert('Error', err.message, [
+      {text:'OK', onPress: () => {
+        console.log('ERR')
+      }},
+    ]);
   }
+};
+
+
+
 
   return (
     <ScrollView>
@@ -63,6 +84,7 @@ export default function LoginScreen(){
             color='#000113'
             title="Login"/>
         </View>
+        <Text style={style.textContinueStyle}>Or Continue With</Text>
         <View style={style.btnContainer}>
         <MyButton
         text="Google"
@@ -71,6 +93,10 @@ export default function LoginScreen(){
         style={{marginLeft:15}}
         text="Facebook"
         imgUrl={ICFacebook}/>
+        </View>
+        <View style={style.containerBottom}>
+          <Text>Dont have account</Text>
+          <Text style={{fontWeight:'bold'}}>Create now</Text>
         </View>
       </View>
     </ScrollView>
@@ -91,10 +117,10 @@ const style = StyleSheet.create({
     fontSize:32,
     marginTop:150,
     fontWeight:'bold',
-    textAlign:'center'
+    textAlign:'center',
   },
   brandStyle:{
-    width:50,
+    width:150,
     marginTop:100,
     alignItems:'center',
     justifyContent:'center'
@@ -106,7 +132,17 @@ const style = StyleSheet.create({
   btnContainer : {
     flex:1,
     flexDirection:'row',
-    paddingLeft:20,
-    paddingRight:20
+    paddingLeft:30,
+    paddingRight:30
+  },
+  textContinueStyle:{
+    textAlign:'center',
+    padding: 10 
+  },
+  containerBottom:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'center',
+    padding:10
   }
 })
